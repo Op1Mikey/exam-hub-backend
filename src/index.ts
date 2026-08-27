@@ -9,7 +9,7 @@ app.use(express.json());
 pool.query("SELECT NOW()").then(() => {
   console.log("✅ Base de données accessible");
 }).catch((err: Error) => {
-  console.error("❌ Impossible de contacter la DB :", err.message);
+  console.error("Impossible de contacter la DB :", err.message);
 });
 
 // Health check
@@ -19,5 +19,5 @@ app.get("/api/health", (_req, res) => {
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`🚀 Exam Hub API démarrée sur le port ${PORT}`);
+  console.log(`Exam Hub API démarrée sur le port ${PORT}`);
 });
