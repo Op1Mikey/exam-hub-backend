@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
     requireAuth,
     requireRole,
-} from "../middlewares/auth";
+} from "../middleware/auth";
 import { StudentController } from "../controllers/studentController";
 
 const router = Router();

@@ -1,4 +1,4 @@
-import { AppError } from "../middlewares/errorHandler";
+import { AppError } from "../middleware/errorHandler";
 import { CourseRepository } from "../repositories/courseRepository";
 
 export class CourseService {

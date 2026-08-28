@@ -1,94 +1,87 @@
-import {
-    Response,
-    NextFunction,
-} from "express";
-import { AuthRequest } from "../middleware/auth";
-import { MyExamService } from "../services/myExamService";
+import { Request, Response, NextFunction } from 'express';
+import * as service from '../services/myExamService';
 
-export class MyExamController {
-    static async getAvailable(
-        req: AuthRequest,
-        res: Response,
-        next: NextFunction
-    ) {
-        try {
-            res.json(
-                await MyExamService.getAvailableExams(
-                    req.user!.userId
-                )
-            );
-        } catch (error) {
-            next(error);
-        }
+// GET /api/my/exams
+export async function listAvailableExams(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const studentId = (req as any).user.userId;
+    const exams = await service.getAvailableExams(studentId);
+    res.json(exams);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// GET /api/my/exams/:id
+export async function getExamDetail(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const examId = parseInt(req.params.id, 10);
+    if (isNaN(examId)) {
+      res.status(400).json({ message: 'Invalid request data' });
+      return;
+    }
+    const studentId = (req as any).user.userId;
+    const exam = await service.getExamDetail(examId, studentId);
+    res.json(exam);
+  } catch (err: any) {
+    if (err.status) {
+      res.status(err.status).json({ message: err.message });
+      return;
+    }
+    next(err);
+  }
+}
+
+// POST /api/my/exams/:id/submit
+export async function submitExam(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const examId = parseInt(req.params.id, 10);
+    if (isNaN(examId)) {
+      res.status(400).json({ message: 'Invalid request data' });
+      return;
+    }
+    const studentId = (req as any).user.userId;
+    const { answers } = req.body;
+
+    if (!Array.isArray(answers)) {
+      res.status(400).json({ message: 'Invalid request data' });
+      return;
     }
 
-    static async getExam(
-        req: AuthRequest,
-        res: Response,
-        next: NextFunction
-    ) {
-        try {
-            const id = Number(req.params.id);
-
-            if (!Number.isInteger(id) || id < 1) {
-                return res
-                    .status(400)
-                    .json({ message: "Invalid id" });
-            }
-
-            res.json(
-                await MyExamService.getExam(
-                    id,
-                    req.user!.userId
-                )
-            );
-        } catch (error) {
-            next(error);
-        }
+    const result = await service.submitExam(examId, studentId, answers);
+    res.status(201).json(result);
+  } catch (err: any) {
+    if (err.status) {
+      res.status(err.status).json({ message: err.message });
+      return;
     }
+    next(err);
+  }
+}
 
-    static async submit(
-        req: AuthRequest,
-        res: Response,
-        next: NextFunction
-    ) {
-        try {
-            const id = Number(req.params.id);
-
-            if (!Number.isInteger(id) || id < 1) {
-                return res
-                    .status(400)
-                    .json({ message: "Invalid id" });
-            }
-
-            const { answers } = req.body;
-
-            const result =
-                await MyExamService.submit(
-                    id,
-                    req.user!.userId,
-                    answers
-                );
-
-            res.status(201).json(result);
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    static async getHistory(
-        req: AuthRequest,
-        res: Response,
-        next: NextFunction
-    ) {
-        try {
-            res.json(
-                await MyExamService.getHistory(
-                    req.user!.userId
-                )
-            );
-        } catch (error) {
-            next(error);
-        }
-    }
+// GET /api/my/results
+export async function getMyResults(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const studentId = (req as any).user.userId;
+    const results = await service.getMyResults(studentId);
+    res.json(results);
+  } catch (err) {
+    next(err);
+  }
 }
