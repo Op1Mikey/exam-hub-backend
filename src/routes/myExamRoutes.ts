@@ -1,35 +1,20 @@
-import { Router } from "express";
+import { Router } from 'express';
+import { requireAuth, requireRole } from '../middleware/auth';
 import {
-    requireAuth,
-    requireRole,
-} from "../middlewares/auth";
-import { MyExamController } from "../controllers/myExamController";
+  listAvailableExams,
+  getExamDetail,
+  submitExam,
+  getMyResults,
+} from '../controllers/myExamController';
 
 const router = Router();
 
-router.use(
-    requireAuth,
-    requireRole("student")
-);
+router.use(requireAuth);
+router.use(requireRole('student'));
 
-router.get(
-    "/exams",
-    MyExamController.getAvailable
-);
-
-router.get(
-    "/exams/:id",
-    MyExamController.getExam
-);
-
-router.post(
-    "/exams/:id/submit",
-    MyExamController.submit
-);
-
-router.get(
-    "/results",
-    MyExamController.getHistory
-);
+router.get('/exams', listAvailableExams);
+router.get('/exams/:id', getExamDetail);
+router.post('/exams/:id/submit', submitExam);
+router.get('/results', getMyResults);
 
 export default router;
