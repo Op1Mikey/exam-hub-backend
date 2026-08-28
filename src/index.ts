@@ -9,12 +9,13 @@ import examRoutes from "./routes/examRoutes";
 import questionRoutes from "./routes/questionRoutes";
 import myExamRoutes from "./routes/myExamRoutes";
 
-import { errorHandler } from "./middlewares/errorHandler";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use((req, _res, next) => { console.log(req.method, req.path); next(); });
 
 app.get("/api/health", (_req, res) => {
     res.json({
@@ -43,13 +44,13 @@ app.use(
 );
 
 app.use(
-    "/api",
-    questionRoutes
+    "/api/my",
+    myExamRoutes
 );
 
 app.use(
-    "/api/my",
-    myExamRoutes
+    "/api",
+    questionRoutes
 );
 
 /*
