@@ -1,4 +1,4 @@
-import { AppError } from "../middlewares/errorHandler";
+import { AppError } from "../middleware/errorHandler";
 import { CourseRepository } from "../repositories/courseRepository";
 import { ExamRepository } from "../repositories/examRepository";
 

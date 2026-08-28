@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
     requireAuth,
     requireRole,
-} from "../middlewares/auth";
+} from "../middleware/auth";
 import { ExamController } from "../controllers/examController";
 import { QuestionController } from "../controllers/questionController";
 

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { AppError } from "../middlewares/errorHandler";
+import { AppError } from "../middleware/errorHandler";
 import { StudentRepository } from "../repositories/studentRepository";
 
 export class StudentService {
