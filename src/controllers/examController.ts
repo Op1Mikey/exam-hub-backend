@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { AuthRequest } from "../middlewares/auth";
+import { AuthRequest } from "../middleware/auth";
 import { ExamService } from "../services/examService";
 
 export class ExamController {

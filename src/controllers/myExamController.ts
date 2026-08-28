@@ -2,7 +2,7 @@ import {
     Response,
     NextFunction,
 } from "express";
-import { AuthRequest } from "../middlewares/auth";
+import { AuthRequest } from "../middleware/auth";
 import { MyExamService } from "../services/myExamService";
 
 export class MyExamController {
