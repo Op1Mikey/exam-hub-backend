@@ -1,31 +1,36 @@
 import "dotenv/config";
 import express from "express";
-import pool from "./config/db";
+import cors from "cors";
 import authRoutes from "./routes/authRoutes";
-import { errorHandler } from "./middlewares/errorHandler";
+import studentRoutes from "./routes/studentRoutes";
+import courseRoutes from "./routes/courseRoutes";
+import examRoutes from "./routes/examRoutes";
+import questionRoutes from "./routes/questionRoutes";
+import myExamRoutes from "./routes/myExamRoutes";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
-// Test connexion DB au démarrage
-pool.query("SELECT NOW()").then(() => {
-  console.log("✅ Base de données accessible");
-}).catch((err: Error) => {
-  console.error("Impossible de contacter la DB :", err.message);
-});
-
-// Routes
-app.use("/api/auth", authRoutes);
-
-// Health check
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok" });
+    res.json({ status: "ok" });
 });
 
-// Middleware d'erreurs (toujours en dernier)
+app.use("/api/auth", authRoutes);
+app.use("/api/students", studentRoutes);
+app.use("/api/courses", courseRoutes);
+app.use("/api/exams", examRoutes);
+app.use("/api/my", myExamRoutes);
+app.use("/api", questionRoutes);
+
+app.use((_req, res) => {
+    res.status(404).json({ message: "Route not found" });
+});
+
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3001;
+const PORT = Number(process.env.PORT) || 3000;
 app.listen(PORT, () => {
-  console.log(`Exam Hub API démarrée sur le port ${PORT}`);
+    console.log(`Exam Hub API démarrée sur http://localhost:${PORT}`);
 });
